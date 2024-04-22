@@ -14,11 +14,22 @@ const START_TIME = new Date().toISOString().replaceAll(':', '_').replaceAll('/',
  */
 export function parseSourceFolderArgument() {
   const args = parseArgs(process.argv.slice(2))
-  const argv = process.platform === 'win32' ? args['_'] : args['s']
+  
+  var argv = null
+  if (process.platform === 'win32') {
+    argv = args['_']
+  } else if (process.platform === 'linux' || process.platform === 'darwin') {
+    argv = args['s']
+  } else {
+    throw Error('Unsupported platform.')
+  }
+
   if (argv === undefined) {
     throw Error('Insufficient parameters to work with.')
   }
+
   return path.posix.resolve(argv + '/')
+
 }
 
 /**
